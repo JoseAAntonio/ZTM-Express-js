@@ -1,23 +1,13 @@
+const frindController = require('./controllers/friends.controller')
+const messageController = require('./controllers/messages.controller')
+
 const express = require("express");
-const { default: next } = require("next");
+
 
 const app = express();
 const port = 3000;
 
-const friends = [
-	{
-		id: 1,
-		name: "Isaac Newton",
-	},
-	{
-		id: 2,
-		name: "Michael Jackson",
-	},
-	{
-		id: 3,
-		name: "Jordan Williams",
-	},
-];
+
 
 // NOTE first middleware to run
 app.use((req, res, next) => {
@@ -33,37 +23,12 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.post("/friends", (req, res) => {
-	if (!req.body.name) {
-		return res.status(400).json({ error: "name is required" });
-	}
+app.post("/friends", frindController.postFriends);
+app.get("/friends", frindController.getFriends);
+app.get("/friends/:friendsId", frindController.getfriend);
 
-	const newFriend = {
-		name: req.body.name,
-		id: friends.length,
-	};
-	friends.push(newFriend);
-
-	res.json(newFriend);
-});
-
-
-app.get("/friends", (_, res) => {
-	res.json(friends);
-});
-
-app.get("/friends/:friendsId", (req, res) => {
-	const friendsId = +req.params.friendsId;
-	const friend = friends[friendsId];
-
-	friend
-		? res.json(friend)
-		: res.status(404).json({ error: "friend does not exist" });
-});
-
-app.post("/messages", (req, res) => {
-	console.log("updating messages...");
-});
+app.get("/messages", messageController.getMessages)
+app.post("/messages", messageController.postMessage);
 
 app.listen(port, () => {
 	console.log(`Server running in port ${port}`);
