@@ -4,6 +4,7 @@ function getFriends (req, res) {
 	res.json(model);
 }
 
+
 function getfriend (req, res) {
 	const friendsId = +req.params.friendsId;
 	const friend = model[friendsId];

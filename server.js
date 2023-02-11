@@ -1,7 +1,8 @@
-const frindController = require('./controllers/friends.controller')
-const messageController = require('./controllers/messages.controller')
-
 const express = require("express");
+
+const friendsRouter = require('./routes/friends.router');
+const messagesRouter = require('./routes/messages.router');
+
 
 
 const app = express();
@@ -18,17 +19,14 @@ app.use((req, res, next) => {
 	//return from endPoint, register the time from request to right before response...
 	const delta = Date.now() - start;
 	//log method, url and time passed
-	console.log(`${req.method} ${req.url} ${delta}`);
+	console.log(`${req.method} ${req.baseUrl}${req.url} ${delta}`);
 });
 
 app.use(express.json());
 
-app.post("/friends", frindController.postFriends);
-app.get("/friends", frindController.getFriends);
-app.get("/friends/:friendsId", frindController.getfriend);
-
-app.get("/messages", messageController.getMessages)
-app.post("/messages", messageController.postMessage);
+//mounting the routers on the app object as Middleware
+app.use("/friends", friendsRouter);
+app.use("/messages", messagesRouter);
 
 app.listen(port, () => {
 	console.log(`Server running in port ${port}`);
